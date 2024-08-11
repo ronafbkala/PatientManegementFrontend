@@ -13,6 +13,15 @@ import PolicyDetails from './components/PolicyDetails';
 import EvaluateRole from './components/EvaluateRole';
 import EvaluatePermission from './components/EvaluatePermission';
 
+import UserList from './components/UserList';
+import UserDetails from './components/UserDetails';
+import AddUser from './components/AddUser';
+import EditUser from './components/EditUser';
+
+import Login from './components/Login';
+
+
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
@@ -34,6 +43,14 @@ const App = () => {
                 <Route path="/policies/:id/edit" element={<EditPolicy />} />
                 <Route path="/evaluate-role" element={<EvaluateRole />} />
                 <Route path="/evaluate-permission" element={<EvaluatePermission />} />
+
+                <Route path="/users" element={<UserList />} />
+                <Route path="/users/:id" element={<UserDetails />} />
+                <Route path="/addUser" element={<AddUser />} />
+                <Route path="/editUser/:id" element={<EditUser />} />
+
+                <Route path="/login" element={<Login />} />
+
             </Routes>
         </Router>
     );

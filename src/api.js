@@ -8,6 +8,32 @@ const PolicyApi = axios.create({
     baseURL: 'http://localhost:8082/api',
 });
 
+const UserApi = axios.create({
+    baseURL: 'http://localhost:8081/api',
+});
+
+
+// Interceptor to add the authentication token to each request
+const attachTokenToRequests = (apiInstance) => {
+    apiInstance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('authToken');  // Assuming the token is stored in localStorage
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+};
+
+// Attach the token interceptor to each API instance
+attachTokenToRequests(api);
+attachTokenToRequests(PolicyApi);
+attachTokenToRequests(UserApi);
+
 export const getPatients = () => api.get('/patients/getAllPatients');
 export const getPatientById = (id) => api.get(`/patients/getPatientById/${id}`);
 export const createPatient = (patient) => api.post('/patients/create', patient);
@@ -38,5 +64,21 @@ export const evaluateUserToPermission = (userId, request) =>
     PolicyApi.post(`/policies/evaluate-permission`, request, { params: { userId } });
 
 // UserService API calls
-export const getUsers = () => PolicyApi.get('/users');
-export const getUserById = (id) => PolicyApi.get(`/users/${id}`);
+//export const getUsers = () => PolicyApi.get('/users');
+//export const getUserById = (id) => PolicyApi.get(`/users/${id}`);
+
+// User Management API Calls
+export const getUsers = () => UserApi.get('/user/getAllUsers');
+export const getUserById = (id) => UserApi.get(`/user/${id}`);
+export const createUser = (user) => UserApi.post('/user/create', user);
+export const updateUser = (id, user) => UserApi.put(`/user/update/${id}`, user);
+export const deleteUser = (id) => UserApi.delete(`/user/delete/${id}`);
+export const authenticateUser = (credentials) => UserApi.post('/user/auth/login', credentials);
+export const logoutUser = () => UserApi.post('/user/logout');
+export const getUserInfo = () => UserApi.get('/user/info');
+
+export const getRoles = () => UserApi.get('/roles/getAllRoles');
+export const getRoleById = (id) => UserApi.get(`/roles/getRoleById/${id}`);
+export const createRole = (role) => UserApi.post('/roles/create', role);
+export const updateRole = (id, role) => UserApi.put(`/roles/update/${id}`, role);
+export const deleteRole = (id) => UserApi.delete(`/roles/delete/${id}`);
