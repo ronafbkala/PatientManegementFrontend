@@ -12,12 +12,34 @@ const UserApi = axios.create({
     baseURL: 'http://localhost:8081/api',
 });
 
-
+/*
 // Interceptor to add the authentication token to each request
 const attachTokenToRequests = (apiInstance) => {
     apiInstance.interceptors.request.use(
         (config) => {
-            const token = localStorage.getItem('authToken');  // Assuming the token is stored in localStorage
+            const token = localStorage.getItem('access_token');  // Assuming the token is stored in localStorage
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+};
+
+// Attach the token interceptor to each API instance
+attachTokenToRequests(api);
+attachTokenToRequests(PolicyApi);
+attachTokenToRequests(UserApi);
+
+ */
+// Interceptor to add the authentication token to each request
+const attachTokenToRequests = (apiInstance) => {
+    apiInstance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('access_token');  // Assuming the token is stored in localStorage
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -60,15 +82,27 @@ export const deletePolicy = (id) => PolicyApi.delete(`/policies/delete/${id}`);
 // Policy Evaluation API Calls
 export const evaluateUserToRole = (userId, environmentAttributes) =>
     PolicyApi.post(`/policies/evaluate-role`, environmentAttributes, { params: { userId } });
-export const evaluateUserToPermission = (userId, request) =>
-    PolicyApi.post(`/policies/evaluate-permission`, request, { params: { userId } });
+//export const evaluateUserToPermission = (userId, request) =>
+    //PolicyApi.post(`/policies/evaluate-permission`, request, { params: { userId } });
 
-// UserService API calls
-//export const getUsers = () => PolicyApi.get('/users');
-//export const getUserById = (id) => PolicyApi.get(`/users/${id}`);
+export const evaluateUserToPermission = async (userId, request) => {
+    try {
+        const response = await PolicyApi.post(
+            `/policies/evaluate-permission`,
+            request,
+            { params: { userId } }
+        );
+        console.log('Evaluate Permission Response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error in evaluateUserToPermission:', error.response || error.message || error);
+        throw error; // Re-throw the error to be handled by the calling function
+    }
+};
 
 // User Management API Calls
 export const getUsers = () => UserApi.get('/user/getAllUsers');
+//export const getUserById = (id) => UserApi.get(`/user/auth/${id}`);
 export const getUserById = (id) => UserApi.get(`/user/${id}`);
 export const createUser = (user) => UserApi.post('/user/create', user);
 export const updateUser = (id, user) => UserApi.put(`/user/update/${id}`, user);
