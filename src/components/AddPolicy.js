@@ -56,6 +56,7 @@ import '../styles.css';
 
 const AddPolicy = () => {
     const [type, setType] = useState('UserToRole');
+    const [username, setUsername] = useState('');
     const [conditions, setConditions] = useState([{ key: '', value: '' }]);
     const [action, setAction] = useState('');
     const navigate = useNavigate();
@@ -94,6 +95,16 @@ const AddPolicy = () => {
                         <option value="UserToRole">User To Role</option>
                         <option value="UserToPermission">User To Permission</option>
                     </select>
+                </label>
+                <label>
+                    Username:
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}  // Update username state
+                        required
+                        className="input"
+                    />
                 </label>
                 <h3>Conditions</h3>
                 {conditions.map((cond, index) => (

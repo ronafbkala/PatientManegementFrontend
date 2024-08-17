@@ -87,10 +87,17 @@ export const evaluateUserToRole = (userId, environmentAttributes) =>
 
 export const evaluateUserToPermission = async (userId, request) => {
     try {
+        const token = localStorage.getItem('access_token');
         const response = await PolicyApi.post(
             `/policies/evaluate-permission`,
             request,
-            { params: { userId } }
+            {
+                params: { userId },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }
         );
         console.log('Evaluate Permission Response:', response.data);
         return response.data;
