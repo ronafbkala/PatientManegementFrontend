@@ -31,6 +31,7 @@ const AddUser = () => {
     const [motherName, setMotherName] = useState('');
     const [roles, setRoles] = useState([]); // Use roles state for selected roles
     const [selectedRoleId, setSelectedRoleId] = useState(''); // Store selected role ID
+
     const [error, setError] = useState(''); // State to handle error messages
 
     const navigate = useNavigate();
@@ -76,6 +77,7 @@ const AddUser = () => {
     };
 */
 
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -94,6 +96,8 @@ const AddUser = () => {
 
         const roleResponse = await getRoleById(selectedRoleId);
         const selectedRole = roleResponse.data;
+
+
 
         console.log('Selected Role:', selectedRole); // Log the selected role
 
@@ -125,8 +129,21 @@ const AddUser = () => {
 
             navigate('/users');
         } catch (error) {
-            console.error('Error creating user:', error); // Log any error that occurs during user creation
+            if (error.response) {
+                // The request was made and the server responded with a status code outside of the range of 2xx
+                console.error('Server Error:', error.response.data);
+                console.error('Status Code:', error.response.status);
+                console.error('Headers:', error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('No response received:', error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error setting up the request:', error.message);
+            }
+            setError('Error creating user. Please try again.');
         }
+
     };
 
     return (
