@@ -109,7 +109,6 @@ export const evaluateUserToPermission = async (userId, request) => {
 
 // User Management API Calls
 export const getUsers = () => UserApi.get('/user/getAllUsers');
-//export const getUserById = (id) => UserApi.get(`/user/auth/${id}`);
 export const getUserById = (id) => UserApi.get(`/user/${id}`);
 export const createUser = (user) => UserApi.post('/user/create', user);
 export const updateUser = (id, user) => UserApi.put(`/user/update/${id}`, user);

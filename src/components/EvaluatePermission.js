@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState} from 'react';
 import { getUserById, getAllPolicies } from '../api';
 import '../styles.css';

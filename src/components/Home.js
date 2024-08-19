@@ -13,6 +13,7 @@ const Home = () => {
                     <li><Link to="/evaluate-role" className="nav-link">Evaluate Role</Link></li>
                     <li><Link to="/evaluate-permission" className="nav-link">Evaluate Permission</Link></li>
                     <li><Link to="/users" className="nav-link">User Management</Link></li>
+                    <li><Link to="/roles" className="nav-link">Roles</Link></li>
                 </ul>
             </nav>
         </div>

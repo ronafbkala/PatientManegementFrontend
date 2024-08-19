@@ -79,10 +79,14 @@ import UserList from './components/UserList';
 import UserDetails from './components/UserDetails';
 import AddUser from './components/AddUser';
 import EditUser from './components/EditUser';
+import AddRole from './components/AddRole';
+import RoleList from './components/RoleList';
+import EditRole from './components/EditRole';
 import Login from './components/Login';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
+import RoleDetails from "./components/RoleDetails";
 
 const keycloakConfig = {
     url: 'http://localhost:8180',
@@ -143,8 +147,15 @@ const App = () => {
 
                 <Route path="/users" element={authenticated ? <UserList /> : <Navigate to="/login" />} />
                 <Route path="/users/:id" element={authenticated ? <UserDetails /> : <Navigate to="/login" />} />
-                <Route path="/addUser" element={authenticated ? <AddUser /> : <Navigate to="/login" />} />
-                <Route path="/editUser/:id" element={authenticated ? <EditUser /> : <Navigate to="/login" />} />
+                <Route path="/users/new" element={authenticated ? <AddUser /> : <Navigate to="/login" />} />
+                <Route path="/users/:id/edit" element={authenticated ? <EditUser /> : <Navigate to="/login" />} />
+
+                <Route path="/roles" element={authenticated ? <RoleList /> : <Navigate to="/login" />} />
+                <Route path="/roles/:id" element={authenticated ? <RoleDetails /> : <Navigate to="/login" />} />
+                <Route path="/roles/new" element={authenticated ? <AddRole /> : <Navigate to="/login" />} />
+                <Route path="/roles/:id/edit" element={authenticated ? <EditRole /> : <Navigate to="/login" />} />
+
+
 
                 <Route path="/login" element={<Login />} />
             </Routes>

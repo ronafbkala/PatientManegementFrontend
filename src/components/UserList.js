@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../api';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
@@ -28,7 +28,7 @@ const UserList = () => {
 
     return (
         <div>
-            <h1>User List</h1>
+            <h1 className="heading">User List</h1>
             {error ? (
                 <div className="alert alert-danger">{error}</div>
             ) : (
@@ -37,7 +37,9 @@ const UserList = () => {
                         {users.length > 0 ? (
                             users.map(user => (
                                 <li key={user.id}>
+                                    <Link to={`/users/${user.id}`} className="nav-link">
                                     {user.username} - {user.email}
+                                    </Link>
                                 </li>
                             ))
                         ) : (
@@ -51,7 +53,8 @@ const UserList = () => {
                         >
                             Add User
                         </button>
-                    )}
+
+                        )}
                 </>
             )}
         </div>
