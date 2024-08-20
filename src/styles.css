@@ -185,3 +185,67 @@ strong {
     justify-content: space-between;
     margin-bottom: 20px;
 }
+
+/* Header and Footer styles */
+.header, .footer {
+    width: 100%; /* Match the width of the .container */
+    max-width: 1600px; /* Optional: Set a maximum width */
+    margin: 0 auto; /* Center the header and footer */
+    padding: 0.5px 5px;
+    background-color: #ADD8E6; /* Green background color */
+    color: midnightblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    left: 0;
+    right: 0;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    z-index: 1000;
+    left: 0;
+    right: 0;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Adjust the main content area to account for header and footer height */
+body {
+    padding-top: 60px;  /* Adjust this value based on header height */
+    padding-bottom: 60px;  /* Adjust this value based on footer height */
+}
+
+/* Ensure .container is also centered */
+.container {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin: 20px auto; /* Center the container */
+}
+.logout-button {
+    background-color: indianred; /* Bootstrap danger color */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.logout-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}

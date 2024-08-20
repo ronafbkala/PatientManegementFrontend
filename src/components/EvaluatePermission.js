@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { getUserById, getAllPolicies } from '../api';
+import { getUserById, getAllPolicies, getPatientById } from '../api';
 import '../styles.css';
 
 const EvaluatePermission = () => {
     const [userId, setUserId] = useState('');
     const [user, setUser] = useState(null);
+    const [patient, setPatient] = useState(null); // State to store patient information
     const [userAttributes, setUserAttributes] = useState({
         name: '',
         institution: '',
@@ -14,12 +15,12 @@ const EvaluatePermission = () => {
     const [resourceAttributes, setResourceAttributes] = useState({
         resourceType: '',
         resourceOwner: '',
+        patientId: '', // Added patientId
     });
     const [environmentAttributes, setEnvironmentAttributes] = useState({
         location: '',
-        time: '',
-        deviceType: '',
-        ipAddress: ''
+        department: '',
+        date: '',
     });
     const [permission, setPermission] = useState(null);
     const [error, setError] = useState(null);
@@ -36,6 +37,20 @@ const EvaluatePermission = () => {
                 setError('Error fetching policies');
             });
     }, []);
+    useEffect(() => {
+        // Fetch patient information when patientId is available
+        if (resourceAttributes.patientId) {
+            getPatientById(resourceAttributes.patientId)
+                .then(response => {
+                    setPatient(response.data); // Store patient data in state
+                    console.log('Patient data:', response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching patient data:', error);
+                    setError('Error fetching patient data');
+                });
+        }
+    }, [resourceAttributes.patientId]); // Trigger this useEffect when patientId changes
 
     useEffect(() => {
         // Ensure the access token is available and fresh before making API calls
@@ -69,7 +84,7 @@ const EvaluatePermission = () => {
         });
     };
 
-    const findMatchingPolicy = (policies, policyType, userAttributes, resourceAttributes, environmentAttributes) => {
+    /*const findMatchingPolicy = (policies, policyType, userAttributes, resourceAttributes, environmentAttributes) => {
         console.log("Evaluating policies:", policies);
 
         return policies.find(policy => {
@@ -102,6 +117,7 @@ const EvaluatePermission = () => {
                         break;
                     case 'position':
                         isMatch = userAttributes.position === value;
+
                         break;
                     case 'rank':
                         isMatch = userAttributes.rank === value;
@@ -130,6 +146,101 @@ const EvaluatePermission = () => {
             return allConditionsMatch;
         });
     };
+
+     */
+
+    const findMatchingPolicy = (policies, policyType, userAttributes, resourceAttributes, environmentAttributes) => {
+        console.log("Evaluating policies:", policies);
+
+        return policies.find(policy => {
+            console.log("Evaluating policy:", policy);
+
+            // Check if the policy type matches
+            if (policy.type !== policyType) {
+                console.log("Skipping policy due to type mismatch:", policy.type);
+                return false;
+            }
+
+            const conditions = policy.condition.split(' AND ');
+
+            // Separate match variables for each condition
+            let isMatchUser = true;
+            let isMatchInstitution = true;
+            let isMatchPosition = true;
+            let isMatchRank = true;
+            let isMatchDepartment = true;
+            let isMatchResourceType = true;
+            let isMatchLocation = true;
+            let isMatchPatientId = true;
+
+            conditions.forEach(cond => {
+                const [key, value] = cond.split('=').map(s => s.trim().toLowerCase()); // Normalize case and trim whitespace
+                console.log(`Checking condition: ${key}=${value}`);
+
+                switch (key) {
+                    case 'user':
+                        isMatchUser = (userAttributes.name || '').trim().toLowerCase() === value;
+                        break;
+                    case 'institution':
+                        isMatchInstitution = (userAttributes.institution || '').trim().toLowerCase() === value;
+                        break;
+                    case 'position':
+                        isMatchPosition = (userAttributes.position || '').trim().toLowerCase() === value;
+                        break;
+                    case 'rank':
+                        isMatchRank = (userAttributes.rank || '').trim().toLowerCase() === value;
+                        break;
+                    case 'department':
+                        const departmentValue = (environmentAttributes.department || '').trim().toLowerCase();
+                        console.log(`Comparing department values: '${departmentValue}' vs '${value}'`);
+                        console.log(`Length of departmentValue: ${departmentValue.length}, Length of value: ${value.length}`);
+                        isMatchDepartment = departmentValue === value;
+                        if (!isMatchDepartment) {
+                            console.log(`Character codes (departmentValue): ${Array.from(departmentValue).map(c => c.charCodeAt(0))}`);
+                            console.log(`Character codes (value): ${Array.from(value).map(c => c.charCodeAt(0))}`);
+                        }
+                        break;
+                    case 'resource_type':
+                        isMatchResourceType = (resourceAttributes.resourceType || '').trim().toLowerCase() === value;
+                        break;
+                    case 'location':
+                        isMatchLocation = (environmentAttributes.location || '').trim().toLowerCase() === value;
+                        break;
+                    case 'patient_id':
+                        isMatchPatientId = resourceAttributes.patientId === parseInt(value, 10);
+                        break;
+                    default:
+                        console.log(`Unknown condition key: ${key}`);
+                        return false;
+                }
+
+                console.log(`Condition ${key}=${value} matched:`,
+                    key === 'user' ? isMatchUser :
+                        key === 'institution' ? isMatchInstitution :
+                            key === 'position' ? isMatchPosition :
+                                key === 'rank' ? isMatchRank :
+                                    key === 'department' ? isMatchDepartment :
+                                        key === 'resource_type' ? isMatchResourceType :
+                                            key === 'location' ? isMatchLocation :
+                                                key === 'patient_id' ? isMatchPatientId : false);
+            });
+
+            // Evaluate if all conditions matched
+            const allConditionsMatch = isMatchUser && isMatchInstitution && isMatchPosition &&
+                isMatchRank && isMatchDepartment && isMatchResourceType &&
+                isMatchLocation && isMatchPatientId;
+
+            if (allConditionsMatch) {
+                console.log("All conditions matched, returning policy:", policy);
+                return true;
+            } else {
+                console.log("Not all conditions matched, skipping policy:", policy);
+                return false;
+            }
+        });
+    };
+
+
 
 
     const handleSubmit = async (event) => {
@@ -166,8 +277,11 @@ const EvaluatePermission = () => {
                 name: userData.username,  // Set the name from the user data
                 institution: userData.institution,
                 position: userData.position,
-                rank: userData.rank
+                rank: userData.rank,
+                //department: userData.department // Set the department from the user data
+
             }));
+
 
             console.log('Sending Request to Evaluate Permission:', {
                 userAttributes,
@@ -205,9 +319,14 @@ const EvaluatePermission = () => {
                     name: userData.username,
                     institution: userData.institution,
                     position: userData.position,
-                    rank: userData.rank
+                    rank: userData.rank,
+                    //department: userData.department // Added department to policy matching
+
                 },
-                resourceAttributes,
+                {
+                    ...resourceAttributes,
+                    patientId: patient ? patient.id : resourceAttributes.patientId, // Use patient ID from fetched data
+                },
                 environmentAttributes
             );
 
@@ -267,6 +386,11 @@ const EvaluatePermission = () => {
                             <input type="text" name="rank" value={userAttributes.rank}
                                    onChange={handleUserAttributeChange} className="input"/>
                         </label>
+                        <label>
+                            Department:
+                            <input type="text" name="department" value={environmentAttributes.department}
+                                   onChange={handleEnvironmentAttributeChange} className="input"/>
+                        </label>
                         <h3>Resource Attributes</h3>
                         <label>
                             Resource Type:
@@ -278,6 +402,11 @@ const EvaluatePermission = () => {
                             Location:
                             <input type="text" name="location" value={environmentAttributes.location}
                                    onChange={handleEnvironmentAttributeChange} className="input"/>
+                        </label>
+                        <label>
+                            Patient ID:  {/* Added patientId input field */}
+                            <input type="text" name="patientId" value={resourceAttributes.patientId}
+                                   onChange={handleResourceAttributeChange} className="input"/>
                         </label>
 
 

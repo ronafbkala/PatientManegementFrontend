@@ -96,16 +96,7 @@ const AddPolicy = () => {
                         <option value="UserToPermission">User To Permission</option>
                     </select>
                 </label>
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}  // Update username state
-                        required
-                        className="input"
-                    />
-                </label>
+
                 <h3>Conditions</h3>
                 {conditions.map((cond, index) => (
                     <div key={index} className="condition-group">
@@ -124,6 +115,9 @@ const AddPolicy = () => {
                                 <option value="rank">Rank</option>
                                 <option value="resource_type">Resource Type</option>
                                 <option value="location">Location</option>
+                                <option value="department">Department</option>
+                                <option value="date">Date</option>
+                                <option value="patient_id">Patient Id</option>
                             </select>
                         </label>
                         <label>
