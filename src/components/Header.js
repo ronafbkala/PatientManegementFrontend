@@ -1,8 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles.css';
 
-const Header = ({ username, onLogout  }) => {
+const Header = ({ username, onLogout }) => {
+    const navigate = useNavigate(); // Initialize the navigate function
+
+    const handleLogout = () => {
+        onLogout(); // Call the passed onLogout function
+        navigate('/logindb'); // Navigate to the login page
+    };
+
     return (
         <header className="header">
             <div className="header-right">
@@ -10,7 +17,7 @@ const Header = ({ username, onLogout  }) => {
             </div>
             <div className="header-left">
                 Welcome, {username}!
-                <button className="logout-button" onClick={onLogout}>
+                <button className="logout-button" onClick={handleLogout}>
                     Log Out
                 </button>
             </div>

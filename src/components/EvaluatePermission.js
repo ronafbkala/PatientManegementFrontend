@@ -15,7 +15,7 @@ const EvaluatePermission = () => {
     const [resourceAttributes, setResourceAttributes] = useState({
         resourceType: '',
         resourceOwner: '',
-        patientId: '', // Added patientId
+        patientId: '',
     });
     const [environmentAttributes, setEnvironmentAttributes] = useState({
         location: '',
@@ -83,71 +83,6 @@ const EvaluatePermission = () => {
             [name]: value
         });
     };
-
-    /*const findMatchingPolicy = (policies, policyType, userAttributes, resourceAttributes, environmentAttributes) => {
-        console.log("Evaluating policies:", policies);
-
-        return policies.find(policy => {
-            console.log("Evaluating policy:", policy);
-
-            // Check if the policy type matches
-            if (policy.type !== policyType) {
-                console.log("Skipping policy due to type mismatch:", policy.type);
-                return false;
-            }
-
-            const conditions = policy.condition.split(' AND ');
-            let usernameMatched = false;
-
-            // Check if any condition matches
-            const allConditionsMatch = conditions.every(cond => {
-                const [key, value] = cond.split('=').map(s => s.trim());
-                console.log(`Checking condition: ${key}=${value}`);
-
-                let isMatch = false;
-                switch (key) {
-                    case 'user':
-                        isMatch = userAttributes.name === value;
-                        if (isMatch) {
-                            usernameMatched = true; // Track if username matched
-                        }
-                        break;
-                    case 'institution':
-                        isMatch = userAttributes.institution === value;
-                        break;
-                    case 'position':
-                        isMatch = userAttributes.position === value;
-
-                        break;
-                    case 'rank':
-                        isMatch = userAttributes.rank === value;
-                        break;
-                    case 'resource_type':
-                        isMatch = resourceAttributes.resourceType === value;
-                        break;
-                    case 'location':
-                        isMatch = environmentAttributes.location === value;
-                        break;
-                    default:
-                        console.log(`Unknown condition key: ${key}`);
-                        return false;
-                }
-                console.log(`Condition ${key}=${value} matched: ${isMatch}`);
-                return isMatch;
-            });
-
-            // Return true if username matched, regardless of other conditions
-            if (usernameMatched) {
-                console.log("Username matched, returning policy:", policy);
-                return true;
-            }
-
-            // Otherwise, return based on all conditions matching
-            return allConditionsMatch;
-        });
-    };
-
-     */
 
     const findMatchingPolicy = (policies, policyType, userAttributes, resourceAttributes, environmentAttributes) => {
         console.log("Evaluating policies:", policies);
@@ -319,8 +254,7 @@ const EvaluatePermission = () => {
                     name: userData.username,
                     institution: userData.institution,
                     position: userData.position,
-                    rank: userData.rank,
-                    //department: userData.department // Added department to policy matching
+                    rank: userData.rank
 
                 },
                 {
@@ -368,7 +302,7 @@ const EvaluatePermission = () => {
                                 value={userAttributes.name}
                                 onChange={handleUserAttributeChange}
                                 className="input"
-                                readOnly  // Make the field read-only since it should be populated automatically
+                                readOnly  //  The field read-only since it should be populated automatically
                             />
                         </label>
                         <label>
