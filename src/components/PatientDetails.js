@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getPatientById, deletePatient } from '../api';
 
-const PatientDetails = () => {
+const PatientDetails = ({ permission }) => {
     const { id } = useParams();
     const [patient, setPatient] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate(); // Correctly import and use useNavigate
+
+    // Log the incoming permission prop
+    console.log('PatientDetails component rendered with permission:', permission);
+
 
 
     useEffect(() => {
@@ -33,6 +37,13 @@ const PatientDetails = () => {
                 setError('Error deleting patient');
             });
     };
+    useEffect(() => {
+        if (permission === null) {
+            // Redirect the user or show an error message if no permission is granted
+            console.error("No valid permission found");
+            navigate('/error-page'); // Or any other handling you prefer
+        }
+    }, [permission]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -101,8 +112,22 @@ const PatientDetails = () => {
                     )}
                 </div>
             </div>
-            <Link to={`/patients/${patient.id}/edit`} className="btn btn-primary">Edit Patient</Link>
-            <button onClick={handleDelete} className="btn btn-danger">Remove Patient</button>
+            {/* Conditionally render edit and delete options based on permission */}
+            {['Read, Write', 'Unlimited Access'].includes(permission) ? (
+                <Link to={`/patients/${patient.id}/edit`} className="btn btn-primary">
+                    Edit Patient
+                </Link>
+            ) : console.log('Edit button not shown. Permission:', permission)}
+
+            {permission === 'Unlimited Access' ? (
+                <button onClick={handleDelete} className="btn btn-danger">
+                    Remove Patient
+                </button>
+            ) : console.log('Delete button not shown. Permission:', permission)}
+
+            {permission === 'Read' && (
+                <p>You have read-only access to this patient's details.</p>
+            )}
         </div>
     );
 };

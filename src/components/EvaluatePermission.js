@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { getUserById, getAllPolicies, getPatientById } from '../api';
 import '../styles.css';
 
-const EvaluatePermission = () => {
+const EvaluatePermission = ({onPermissionEvaluated}) => {
     const [userId, setUserId] = useState('');
     const [user, setUser] = useState(null);
     const [patient, setPatient] = useState(null); // State to store patient information
@@ -176,11 +176,8 @@ const EvaluatePermission = () => {
     };
 
 
-
-
-    const handleSubmit = async (event) => {
+    const handleSubmit  = async (event) => {
         event.preventDefault()
-
         // Retrieve the token from local storage
         const token = localStorage.getItem('access_token');  // Use the correct key here
         console.log('Auth Token:', token);
@@ -209,11 +206,10 @@ const EvaluatePermission = () => {
             // Automatically populate the name field in userAttributes
             setUserAttributes((prevAttributes) => ({
                 ...prevAttributes,
-                name: userData.username,  // Set the name from the user data
+                name: userData.username,
                 institution: userData.institution,
                 position: userData.position,
                 rank: userData.rank,
-                //department: userData.department // Set the department from the user data
 
             }));
 
@@ -238,13 +234,8 @@ const EvaluatePermission = () => {
             // Log the request payload
             console.log('Sending Request to Evaluate Permission:', request);
 
-
             // Ensure that we are only matching policies of type 'UserToPermission'
             console.log("Evaluating for policy type: UserToPermission");
-            //const matchingPolicy = findMatchingPolicy(policies, 'UserToPermission', userAttributes, resourceAttributes, environmentAttributes);
-
-
-
 
             const matchingPolicy = findMatchingPolicy(
                 policies,
@@ -272,17 +263,30 @@ const EvaluatePermission = () => {
 
                 setPermission(matchingPolicy.action);
                 setError(null);
+                if (onPermissionEvaluated) {
+                    console.log("Calling onPermissionEvaluated with:", matchingPolicy.action);
+                    onPermissionEvaluated(matchingPolicy.action);
+                    console.log("Calling onPermissionEvaluated with:", onPermissionEvaluated(matchingPolicy.action));
+                }
+
             } else {
                 console.log("No matching policy found");
                 setError("No matching policy found");
                 setPermission(null);
+                onPermissionEvaluated(null);
             }
         } catch (error) {
             console.error('Error in processing:', error.response?.data || error.message || error);
             setError('No matching permission found' || error.message);
             setPermission(null);
+            onPermissionEvaluated(null);
         }
     };
+
+
+
+
+
         return (
             <>
                 <div className="overlay"></div>
@@ -320,11 +324,6 @@ const EvaluatePermission = () => {
                             <input type="text" name="rank" value={userAttributes.rank}
                                    onChange={handleUserAttributeChange} className="input"/>
                         </label>
-                        <label>
-                            Department:
-                            <input type="text" name="department" value={environmentAttributes.department}
-                                   onChange={handleEnvironmentAttributeChange} className="input"/>
-                        </label>
                         <h3>Resource Attributes</h3>
                         <label>
                             Resource Type:
@@ -338,7 +337,12 @@ const EvaluatePermission = () => {
                                    onChange={handleEnvironmentAttributeChange} className="input"/>
                         </label>
                         <label>
-                            Patient ID:  {/* Added patientId input field */}
+                            Department:
+                            <input type="text" name="department" value={environmentAttributes.department}
+                                   onChange={handleEnvironmentAttributeChange} className="input"/>
+                        </label>
+                        <label>
+                            Patient ID:
                             <input type="text" name="patientId" value={resourceAttributes.patientId}
                                    onChange={handleResourceAttributeChange} className="input"/>
                         </label>
