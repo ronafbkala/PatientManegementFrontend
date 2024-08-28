@@ -1,58 +1,7 @@
-/*import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createPolicy } from '../api';
-import '../styles.css';
-
-const AddPolicy = () => {
-    const [type, setType] = useState('');
-    const [condition, setCondition] = useState('');
-    const [action, setAction] = useState('');
-    const navigate = useNavigate();
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const newPolicy = { type, condition, action };
-        createPolicy(newPolicy)
-            .then(() => {
-                navigate('/policies');
-            })
-            .catch(error => {
-                console.error('Error creating policy:', error);
-            });
-    };
-
-    return (
-        <>
-            <div className="overlay"></div>
-            <div className="container">
-                <h1>Add New Policy</h1>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Type:
-                        <input type="text" value={type} onChange={(e) => setType(e.target.value)} required />
-                    </label>
-                    <label>
-                        Condition:
-                        <input type="text" value={condition} onChange={(e) => setCondition(e.target.value)} required />
-                    </label>
-                    <label>
-                        Action:
-                        <input type="text" value={action} onChange={(e) => setAction(e.target.value)} required />
-                    </label>
-                    <button type="submit">Add Policy</button>
-                </form>
-            </div>
-        </>
-    );
-};
-
-export default AddPolicy;
-*/
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createPolicy } from '../api';
-import '../styles.css';
+import { createPolicy } from '../../../api';
+import '../../../styles.css';
 
 const AddPolicy = () => {
     const [type, setType] = useState('UserToRole');
@@ -77,7 +26,7 @@ const AddPolicy = () => {
         const newPolicy = { type, condition: conditionString, action };
         createPolicy(newPolicy)
             .then(() => {
-                navigate('/policies');
+                navigate('/dataowner/policy');
             })
             .catch(error => {
                 console.error('Error creating policy:', error);

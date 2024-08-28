@@ -62,6 +62,9 @@ export const createPatient = (patient) => api.post('/patients/create', patient);
 export const updatePatient = (id, patient) => api.put(`/patients/update/${id}`, patient);
 export const deletePatient = (id) => api.delete(`/patients/delete/${id}`);
 
+export const getMedicalRecordById = (id) => api.get(`/medical-records/${id}`);
+
+
 /*export const getMedicalRecords = () => api.get('/medical-records/getAll');
 export const getMedicalRecordById = (id) => api.get(`/medical-records/${id}`);
 export const createMedicalRecord = (record) => api.post('/medical-records/create', record);
