@@ -88,7 +88,6 @@ const PatientDetails = ({ permission }) => {
                     )}
                 </div>
             </div>
-            {/* Conditionally render edit options based on permission */}
             {['Read, Write', 'Unlimited Access'].includes(permission) && (
                 <Link to={`/staff/patients/${patient.id}/edit`} className="btn btn-primary">
                     Edit Patient

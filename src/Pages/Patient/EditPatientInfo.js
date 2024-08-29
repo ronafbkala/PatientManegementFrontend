@@ -43,7 +43,7 @@ const EditPatientInfo = () => {
         e.preventDefault();
         updatePatient(patientId, patient)
             .then(() => {
-                navigate('/patient/dashboard'); 
+                navigate('/patient/dashboard');
             })
             .catch(error => {
                 console.error('Error updating patient data:', error);

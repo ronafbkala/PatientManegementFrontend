@@ -12,7 +12,7 @@ const UserDetails = () => {
     useEffect(() => {
         getUserById(id)
             .then(response => {
-                console.log('Fetched User After Update:', response.data);  // This should show the updated role
+                console.log('Fetched User After Update:', response.data);
                 setUser(response.data);
                 setLoading(false);
             })

@@ -13,7 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
 // Import the DataOwner pages
-import Dashboard from './Pages/DataOwner/Dashboard'; // Adjusted path to where Dashboard is
+import Dashboard from './Pages/DataOwner/Dashboard';
 import PatientList from './Pages/DataOwner/Patient/PatientList';
 import PatientDetails from './Pages/DataOwner/Patient/PatientDetails';
 import AddPatient from './Pages/DataOwner/Patient/AddPatient';
@@ -57,10 +57,10 @@ const App = () => {
     const [loading, setLoading] = useState(true);
     const [username, setUsername] = useState('');
     const [permission, setPermission] = useState(null);
-    const [userRole, setUserRole] = useState(''); // State to store the user role
-    const [policies, setPolicies] = useState([]); // Store policies for the user
+    const [userRole, setUserRole] = useState('');
+    const [policies, setPolicies] = useState([]);
     const [conditionsVerified, setConditionsVerified] = useState(false);
-    const [patientId, setPatientId] = useState(null); // Add state for patient ID
+    const [patientId, setPatientId] = useState(null);
 
 
     const keycloakInstance = useMemo(() => new Keycloak(keycloakConfig), []);

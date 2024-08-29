@@ -41,7 +41,7 @@ const EditUser = () => {
         const updatedUser = {
             id: user.id,
             username: user.username,
-            password: user.password, // Ensure the backend accepts the password in this form
+            password: user.password,
             email: user.email,
             institution: user.institution || "",
             position: user.position || "",
@@ -79,67 +79,56 @@ const EditUser = () => {
     }
 
     return (
-        <div>
+        <div className="container">
             <h1>Edit User</h1>
             <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input type="text" name="username" value={user.username} onChange={handleChange} required />
-                </label>
-                <br />
-                <label>
-                    Email:
-                    <input type="email" name="email" value={user.email} onChange={handleChange} required />
-                </label>
-                <br />
-                <label>
-                    Institution:
-                    <input type="text" name="institution" value={user.institution} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
-                    Position:
-                    <input type="text" name="position" value={user.position} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
-                    Rank:
-                    <input type="text" name="rank" value={user.rank} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
-                    Address:
-                    <input type="text" name="address" value={user.address} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
-                    Birthdate:
-                    <input type="date" name="birthdate" value={user.birthdate} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
-                    Father's Name:
-                    <input type="text" name="fatherName" value={user.fatherName} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
-                    Mother's Name:
-                    <input type="text" name="motherName" value={user.motherName} onChange={handleChange} />
-                </label>
-                <br />
-                <h2>Roles</h2>
-                <label>
-                    Select Roles:
-                    <select multiple={true} value={user.roles} onChange={handleRoleChange} className="select">
+                <div className="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" className="form-control" value={user.username} onChange={handleChange} required />
+                </div>
+                <div className="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" className="form-control" value={user.email} onChange={handleChange} required />
+                </div>
+                <div className="form-group">
+                    <label>Institution</label>
+                    <input type="text" name="institution" className="form-control" value={user.institution} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Position</label>
+                    <input type="text" name="position" className="form-control" value={user.position} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Rank</label>
+                    <input type="text" name="rank" className="form-control" value={user.rank} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Address</label>
+                    <input type="text" name="address" className="form-control" value={user.address} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Birthdate</label>
+                    <input type="date" name="birthdate" className="form-control" value={user.birthdate} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Father's Name</label>
+                    <input type="text" name="fatherName" className="form-control" value={user.fatherName} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Mother's Name</label>
+                    <input type="text" name="motherName" className="form-control" value={user.motherName} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Select Roles</label>
+                    <select multiple={true} value={user.roles} onChange={handleRoleChange} className="form-control">
                         {roles.map(role => (
                             <option key={role.id} value={role.id}>
                                 {role.name}
                             </option>
                         ))}
                     </select>
-                </label>
-                <br />
-                <button type="submit">Update User</button>
+                </div>
+                <button type="submit" className="btn btn-primary">Update User</button>
             </form>
         </div>
     );

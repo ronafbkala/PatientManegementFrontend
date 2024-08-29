@@ -15,7 +15,6 @@ const UserList = () => {
             } catch (err) {
                 if (err.response && err.response.status === 401) {
                     setError('Unauthorized access. Please log in.');
-                    // Optionally, redirect to login page
                     navigate('/login');
                 } else {
                     setError('An error occurred while fetching users.');

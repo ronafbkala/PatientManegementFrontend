@@ -29,10 +29,10 @@ const AddUser = () => {
     const [birthdate, setBirthdate] = useState('');
     const [fatherName, setFatherName] = useState('');
     const [motherName, setMotherName] = useState('');
-    const [roles, setRoles] = useState([]); // Use roles state for selected roles
-    const [selectedRoleId, setSelectedRoleId] = useState(''); // Store selected role ID
+    const [roles, setRoles] = useState([]);
+    const [selectedRoleId, setSelectedRoleId] = useState('');
 
-    const [error, setError] = useState(''); // State to handle error messages
+    const [error, setError] = useState('');
 
     const navigate = useNavigate();
 
@@ -47,42 +47,13 @@ const AddUser = () => {
             });
     }, []);
 
-    /*const handleRoleChange = (event) => {
-        const { value, checked } = event.target;
-        if (checked) {
-            setSelectedRoles([...selectedRoles, value]);
-        } else {
-            setSelectedRoles(selectedRoles.filter(role => role !== value));
-        }
-    };
-    const handleRoleChange = (index, field, value) => {
-        const updatedRoles = [...selectedRoles];
-        if (field === 'id') {
-            const selectedRole = roles.find(role => role.id === value);
-            updatedRoles[index] = { key: selectedRole.id, value: selectedRole.name };
-        } else {
-            updatedRoles[index][field] = value;
-        }
-
-        setSelectedRoles(updatedRoles);
-    };
-
-    const addRoleCondition = () => {
-        setSelectedRoles([...selectedRoles, { id: '', name: '' }]);
-    };
-
-    const removeRoleCondition = (index) => {
-        const updatedRoles = selectedRoles.filter((_, i) => i !== index);
-        setSelectedRoles(updatedRoles);
-    };
-*/
 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         // Retrieve the token from local storage
-        const token = localStorage.getItem('access_token');  // Use the correct key here
+        const token = localStorage.getItem('access_token');
         console.log('Auth Token:', token);
 
 
@@ -99,7 +70,7 @@ const AddUser = () => {
 
 
 
-        console.log('Selected Role:', selectedRole); // Log the selected role
+        console.log('Selected Role:', selectedRole);
 
         if (!selectedRole) {
             setError('Please select a role.');
@@ -117,20 +88,19 @@ const AddUser = () => {
             birthdate,
             fatherName,
             motherName,
-            //roles: selectedRoles, // Include selected roles in the submission
-            roles: [{ id: selectedRole.id, name: selectedRole.name }], // Include selected role in the submission
+            //roles: selectedRoles,
+            roles: [{ id: selectedRole.id, name: selectedRole.name }],
 
         };
         console.log('Creating new user with data:', JSON.stringify(newUser, null, 2));
 
         try {
             const response = await createUser(newUser);
-            console.log('User created successfully:', response.data); // Log the response from the API
+            console.log('User created successfully:', response.data);
 
             navigate('/dataowner/user');
         } catch (error) {
             if (error.response) {
-                // The request was made and the server responded with a status code outside of the range of 2xx
                 console.error('Server Error:', error.response.data);
                 console.error('Status Code:', error.response.status);
                 console.error('Headers:', error.response.headers);
